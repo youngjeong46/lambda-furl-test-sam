@@ -42,7 +42,7 @@ Resources:
   LambdaFurlUuidLayer:
     Type: AWS::Serverless::LayerVersion
     Properties:
-      ContentUri: uuid-layer.zip
+      ContentUri: layers/uuid-layer.zip
       CompatibleRuntimes:
         - nodejs12.x
         - nodejs14.x
