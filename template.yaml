@@ -19,7 +19,7 @@ Resources:
         - !Ref LambdaFurlLayer
       FunctionUrlConfig:
         AuthType: NONE
-        CORS: 
+        Cors: 
           AllowMethods:
             - GET
           AllowHeaders:
