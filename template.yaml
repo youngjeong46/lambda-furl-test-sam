@@ -1,0 +1,45 @@
+Transform: AWS::Serverless-2016-10-31
+
+Globals:
+  Function:
+    Runtime: nodejs14.x
+    Handler: index.handler
+
+Description:
+  "SAM Template for Lambda Function URL demo."
+
+Resources:
+  LambdaFurlNoAuthFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      PackageType: Zip
+      CodeUri: function.zip
+      AutoPublishAlias: live
+      Layers:
+        - !Ref LambdaFurlLayer
+      FunctionUrlConfig:
+        AuthType: NONE
+        CORS: 
+          AllowMethods:
+            - GET
+          AllowHeaders:
+            - keep-alive
+            - content-type
+
+  LambdaFurlLayer:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      ContentUri: uuid-layer.zip
+      CompatibleRuntimes:
+        - nodejs12.x
+        - nodejs14.x
+      RetentionPolicy: Retain
+    Metadata:
+      BuildMethod: nodejs14.x
+
+
+Outputs:
+  LambdaFurlNoAuthFunctionEndpoint:
+    Description: "Endpoint of the No Auth Lambda Function."
+    Value: 
+      Fn::GetAtt LambdaFurlNoAuthFunctionUrl.FunctionUrl
