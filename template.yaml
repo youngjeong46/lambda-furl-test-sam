@@ -13,9 +13,9 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       PackageType: Zip
-      CodeUri: function.zip
+      CodeUri: response/function.zip
       Layers:
-        - !Ref LambdaFurlLayer
+        - !Ref LambdaFurlUuidLayer
       FunctionUrlConfig:
         AuthType: NONE
         Cors: 
@@ -27,7 +27,19 @@ Resources:
             - keep-alive
             - Content-type
 
-  LambdaFurlLayer:
+  LambdaFurlRequestFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      PackageType: Zip
+      CodeUri: request/function.zip
+      Layers:
+        - !Ref LambdaFurlUuidLayer
+      Environment:
+        Variables:
+          FUNCTION_URL: 
+            !GetAtt LambdaFurlNoAuthFunctionUrl.FunctionUrl
+
+  LambdaFurlUuidLayer:
     Type: AWS::Serverless::LayerVersion
     Properties:
       ContentUri: uuid-layer.zip
@@ -43,4 +55,4 @@ Outputs:
   LambdaFurlNoAuthFunctionEndpoint:
     Description: "Endpoint of the No Auth Lambda Function."
     Value: 
-      Fn::GetAtt LambdaFurlNoAuthFunctionUrl.FunctionUrl
+      !GetAtt LambdaFurlNoAuthFunctionUrl.FunctionUrl
