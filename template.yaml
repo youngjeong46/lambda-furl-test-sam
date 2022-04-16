@@ -20,6 +20,8 @@ Resources:
       FunctionUrlConfig:
         AuthType: NONE
         Cors: 
+          AllowOrigins:
+            - '*'
           AllowMethods:
             - GET
           AllowHeaders:
