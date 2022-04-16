@@ -14,7 +14,6 @@ Resources:
     Properties:
       PackageType: Zip
       CodeUri: function.zip
-      AutoPublishAlias: live
       Layers:
         - !Ref LambdaFurlLayer
       FunctionUrlConfig:
@@ -26,7 +25,7 @@ Resources:
             - GET
           AllowHeaders:
             - keep-alive
-            - content-type
+            - Content-type
 
   LambdaFurlLayer:
     Type: AWS::Serverless::LayerVersion
