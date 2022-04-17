@@ -26,18 +26,43 @@ Resources:
           AllowHeaders:
             - keep-alive
             - Content-type
+  
+  LambdaFurlIAMFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      PackageType: Zip
+      CodeUri: response/function.zip
+      Layers:
+        - !Ref LambdaFurlUuidLayer
+      FunctionUrlConfig:
+        AuthType: AWS_IAM
+        Cors: 
+          AllowOrigins:
+            - '*'
+          AllowMethods:
+            - GET
+          AllowHeaders:
+            - keep-alive
+            - Content-type
 
   LambdaFurlRequestFunction:
     Type: AWS::Serverless::Function
     Properties:
       PackageType: Zip
       CodeUri: request/function.zip
-      Layers:
-        - !Ref LambdaFurlUuidLayer
       Environment:
         Variables:
           FUNCTION_URL: 
-            !GetAtt LambdaFurlNoAuthFunctionUrl.FunctionUrl
+            !GetAtt LambdaFurlIAMFunctionUrl.FunctionUrl
+      Policies:
+      - Statement:
+        - Sid: AllowFunctionURLInvocation
+          Effect: Allow
+          Action: 'lambda:InvokeFunctionUrl'
+          Resource: !GetAtt LambdaFurlIAMFunction.Arn
+          Condition:
+              StringEquals:
+                "lambda:FunctionUrlAuthType": "AWS_IAM"
 
   LambdaFurlUuidLayer:
     Type: AWS::Serverless::LayerVersion
@@ -56,3 +81,7 @@ Outputs:
     Description: "Endpoint of the No Auth Lambda Function."
     Value: 
       !GetAtt LambdaFurlNoAuthFunctionUrl.FunctionUrl
+  LambdaFurlIAMFunctionEndpoint:
+    Description: "Endpoint of the IAM Auth Lambda Function."
+    Value: 
+      !GetAtt LambdaFurlIAMFunctionUrl.FunctionUrl
