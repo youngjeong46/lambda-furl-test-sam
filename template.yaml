@@ -45,24 +45,25 @@ Resources:
             - keep-alive
             - Content-type
 
-  LambdaFurlRequestFunction:
-    Type: AWS::Serverless::Function
-    Properties:
-      PackageType: Zip
-      CodeUri: request/function.zip
-      Environment:
-        Variables:
-          FUNCTION_URL: 
-            !GetAtt LambdaFurlIAMFunctionUrl.FunctionUrl
-      Policies:
-      - Statement:
-        - Sid: AllowFunctionURLInvocation
-          Effect: Allow
-          Action: 'lambda:InvokeFunctionUrl'
-          Resource: !GetAtt LambdaFurlIAMFunction.Arn
-          Condition:
-              StringEquals:
-                "lambda:FunctionUrlAuthType": "AWS_IAM"
+  # Optional Request function to invoke AWS_IAM Function
+  # LambdaFurlRequestFunction:
+  #   Type: AWS::Serverless::Function
+  #   Properties:
+  #     PackageType: Zip
+  #     CodeUri: request/function.zip
+  #     Environment:
+  #       Variables:
+  #         FUNCTION_URL: 
+  #           !GetAtt LambdaFurlIAMFunctionUrl.FunctionUrl
+  #     Policies:
+  #     - Statement:
+  #       - Sid: AllowFunctionURLInvocation
+  #         Effect: Allow
+  #         Action: 'lambda:InvokeFunctionUrl'
+  #         Resource: !GetAtt LambdaFurlIAMFunction.Arn
+  #         Condition:
+  #             StringEquals:
+  #               "lambda:FunctionUrlAuthType": "AWS_IAM"
 
   LambdaFurlUuidLayer:
     Type: AWS::Serverless::LayerVersion
